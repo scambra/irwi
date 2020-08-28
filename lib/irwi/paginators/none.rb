@@ -1,20 +1,12 @@
 require 'active_support/core_ext/hash'
 
 class Irwi::Paginators::None
-
-  def paginate( collection, options = {} )
-    find_options = options.except :page, :per_page, :total_entries, :finder
-
-    if collection.is_a? ActiveRecord::Base
-      collection.all
-    else
-      collection
-    end
+  def paginate(collection, _options = {})
+    collection.all
   end
 
-  def paginated_section( view, collection, &block )
+  def paginated_section(_view, _collection, &_block)
     yield
-    return
+    nil
   end
-
 end

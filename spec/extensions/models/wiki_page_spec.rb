@@ -3,9 +3,7 @@ require "spec_helper"
 require "active_record"
 
 describe Irwi::Extensions::Models::WikiPage do
-
   class AbstractPage < ActiveRecord::Base
-
     def self.columns
       c = ActiveRecord::ConnectionAdapters::Column
 
@@ -15,70 +13,60 @@ describe Irwi::Extensions::Models::WikiPage do
         c.new("content", nil, "text", false)
       ]
     end
-
   end
 
-  it { should_not be_nil }
+  it { is_expected.not_to be_nil }
 
   before :all do
-    Irwi::config.page_attachment_class_name = nil
+    Irwi.config.page_attachment_class_name = nil
+  end
 
-    @cls = Class.new AbstractPage do
+  let :cls do
+    Class.new AbstractPage do
+      self.table_name = 'pages'
 
-      self.table_name  = 'pages'
-
-      include Irwi::Extensions::Models::WikiPage
+      acts_as_wiki_page
     end
   end
 
   context "class" do
+    subject { cls }
 
-    it { @cls.should respond_to(:find) }
-    it { @cls.should respond_to(:find_by_path_or_new) }
-
+    it { is_expected.to respond_to(:find) }
+    it { is_expected.to respond_to(:find_by_path_or_new) }
   end
 
   context "instance" do
+    subject { cls.new }
 
-    before :each do
-      @obj = @cls.new
-    end
+    it { is_expected.to respond_to(:save) }
+    it { is_expected.to respond_to(:destroy) }
 
-    it { @obj.should respond_to(:save) }
-    it { @obj.should respond_to(:destroy) }
+    it { is_expected.to respond_to(:comment) }
+    it { is_expected.to respond_to(:previous_version_number) }
 
-    it { @obj.should respond_to(:comment) }
-    it { @obj.should respond_to(:previous_version_number) }
+    it { is_expected.to respond_to(:versions) }
 
-    it { @obj.should respond_to(:versions) }
-
-    it { @obj.should_not respond_to(:attachments) }
-
+    it { is_expected.not_to respond_to(:attachments) }
   end
 
   context "with attachments" do
-
     before :all do
-      Irwi::config.page_attachment_class_name = 'WikiPageAttachment'
+      Irwi.config.page_attachment_class_name = 'WikiPageAttachment'
+    end
 
-      @cls = Class.new AbstractPage do
+    let :cls do
+      Class.new AbstractPage do
+        self.table_name = 'pages'
 
-        self.table_name  = 'pages'
-
-        include Irwi::Extensions::Models::WikiPage
+        acts_as_wiki_page
       end
     end
 
     context "instance" do
+      subject { cls.new }
 
-      before :each do
-        @obj = @cls.new
-      end
-
-      it { @obj.should respond_to(:attachments) }
-
+      it { is_expected.to respond_to(:attachments) }
     end
-
   end
-
 end

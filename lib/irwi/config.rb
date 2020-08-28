@@ -1,7 +1,6 @@
 require 'active_support'
 
 class Irwi::Config
-
   attr_accessor :controller_name
   attr_accessor :user_class_name
   attr_accessor :page_class_name
@@ -13,33 +12,25 @@ class Irwi::Config
   attr_writer :formatter
 
   def formatter
-    @formatter ||= begin
-                     require 'irwi/formatters/red_cloth'
-                     
-                     self.formatter = Irwi::Formatters::RedCloth.new
-                   end	
+    @formatter ||= Irwi::Formatters.autodetect
   end
 
   # Object using to compare pages
   attr_writer :comparator
-  
+
   def comparator
     @comparator ||= begin
                       require 'irwi/comparators/diff_lcs'
-                      
+
                       self.comparator = Irwi::Comparators::DiffLcs.new
-                    end	
+                    end
   end
 
   # Object using to paginate collections
   attr_writer :paginator
-    
+
   def paginator
-    @paginator ||= begin
-                     require 'irwi/paginators/none'
-                     
-                     self.paginator = Irwi::Paginators::None.new
-                   end	
+    @paginator ||= Irwi::Paginators.autodetect
   end
 
   def initialize
@@ -49,7 +40,7 @@ class Irwi::Config
     @page_version_class_name = 'WikiPageVersion'
     @page_attachment_class_name = nil
     @page_version_foreign_key = 'page_id'
-  end   
+  end
 
   def page_class
     page_class_name.constantize
@@ -76,8 +67,7 @@ class Irwi::Config
   # Add system page
   # @param action [String,Symbol] controller action
   # @param path [String] path in routes
-  def add_system_page( action, path )
-    system_pages[ action.to_s ] = path.to_s
+  def add_system_page(action, path)
+    system_pages[action.to_s] = path.to_s
   end
-
 end
