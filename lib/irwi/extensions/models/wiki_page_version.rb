@@ -17,7 +17,7 @@ module Irwi::Extensions::Models::WikiPageVersion
 
   included do
     belongs_to :page, class_name: Irwi.config.page_class_name
-    belongs_to :updator, class_name: Irwi.config.user_class_name
+    belongs_to :updator, class_name: Irwi.config.user_class_name, optional: true
 
     before_update :raise_on_update
 
