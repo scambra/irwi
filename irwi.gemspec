@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   # Gem dependencies
   s.add_dependency "diff-lcs", ">= 1.1.2"
 
-  s.add_dependency "activerecord", ">= 4.0"
+  s.add_dependency "activerecord", ">= 5.0"
   s.add_dependency "activesupport", ">= 4.0"
   s.add_dependency "actionpack", ">= 4.0"
   s.add_dependency "rails_autolink", ">= 1.0" # TODO: should be optional
