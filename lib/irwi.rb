@@ -26,10 +26,14 @@ module Irwi
   end
 end
 
-require 'irwi/extensions/controllers'
-require 'irwi/extensions/models'
-require 'irwi/support/route_mapper' # Routes
 require 'irwi/helpers'
 require 'irwi/config'
 
-ActionController::Base.append_view_path File.expand_path('../../app/views', __FILE__) # Append default views
+ActiveSupport.on_load :action_controller_base do
+  require 'irwi/extensions/controllers'
+  require 'irwi/support/route_mapper' # Routes
+  ActionController::Base.append_view_path File.expand_path('../../app/views', __FILE__) # Append default views
+end
+ActiveSupport.on_load :active_record do
+  require 'irwi/extensions/models'
+end
